@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}{{ character.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('view_characters', project_id=project.id) }}" class="back-link">← Characters</a>
+  <div class="page-header-actions">
+    <a href="{{ url_for('edit_character', project_id=project.id, char_id=character.id) }}" class="btn btn-primary btn-sm">✏ Edit Character</a>
+    <form method="POST" action="{{ url_for('delete_character', project_id=project.id, char_id=character.id) }}" style="display:inline">
+      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this character?')">🗑 Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="char-detail-hero" style="--char-color: {{ character.avatar_color }}">
+  <div class="char-detail-avatar" style="background: {{ character.avatar_color }}">
+    {{ character.avatar_initials or character.name[0] }}
+  </div>
+  <div class="char-detail-header-info">
+    <div class="char-role-badge role-{{ character.role | lower | replace(' ', '-') if character.role else 'unknown' }} badge-lg">{{ character.role or 'Character' }}</div>
+    <h1 class="char-detail-name">{{ character.name }}</h1>
+    <div class="char-detail-meta">
+      {% if character.archetype %}<span class="char-meta-pill">{{ character.archetype }}</span>{% endif %}
+      {% if character.age %}<span class="char-meta-pill">Age {{ character.age }}</span>{% endif %}
+      {% if character.gender %}<span class="char-meta-pill">{{ character.gender }}</span>{% endif %}
+    </div>
+  </div>
+</div>
+
+<div class="char-detail-layout">
+
+  <div class="char-detail-main">
+
+    {% if character.appearance %}
+    <div class="char-section-card">
+      <div class="char-section-icon">👁</div>
+      <h2 class="char-section-title">Appearance</h2>
+      <p>{{ character.appearance }}</p>
+    </div>
+    {% endif %}
+
+    {% if character.personality %}
+    <div class="char-section-card">
+      <div class="char-section-icon">🧠</div>
+      <h2 class="char-section-title">Personality</h2>
+      <p>{{ character.personality }}</p>
+    </div>
+    {% endif %}
+
+    {% if character.backstory %}
+    <div class="char-section-card">
+      <div class="char-section-icon">📚</div>
+      <h2 class="char-section-title">Backstory</h2>
+      <p>{{ character.backstory }}</p>
+    </div>
+    {% endif %}
+
+    {% if character.arc %}
+    <div class="char-section-card">
+      <div class="char-section-icon">🌠</div>
+      <h2 class="char-section-title">Character Arc</h2>
+      <p>{{ character.arc }}</p>
+    </div>
+    {% endif %}
+
+    {% if character.quotes %}
+    <div class="char-section-card quotes-card">
+      <div class="char-section-icon">💬</div>
+      <h2 class="char-section-title">Notable Quotes</h2>
+      <div class="quotes-list">
+        {% for quote in character.quotes.split(' | ') %}
+        <blockquote class="char-quote">{{ quote.strip() }}</blockquote>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <div class="char-detail-sidebar">
+
+    {% if character.motivations %}
+    <div class="char-sidebar-card">
+      <h3>⚡ Motivations</h3>
+      <p>{{ character.motivations }}</p>
+    </div>
+    {% endif %}
+
+    {% if character.abilities %}
+    <div class="char-sidebar-card">
+      <h3>⚔ Abilities & Skills</h3>
+      <p>{{ character.abilities }}</p>
+    </div>
+    {% endif %}
+
+    {% if character.flaws %}
+    <div class="char-sidebar-card">
+      <h3>💔 Flaws & Weaknesses</h3>
+      <p>{{ character.flaws }}</p>
+    </div>
+    {% endif %}
+
+    {% if character.relationships %}
+    <div class="char-sidebar-card">
+      <h3>🤝 Relationships</h3>
+      <p>{{ character.relationships }}</p>
+    </div>
+    {% endif %}
+
+    <div class="char-sidebar-card">
+      <h3>🔗 Part of</h3>
+      <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="project-link-pill">{{ project.title }}</a>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

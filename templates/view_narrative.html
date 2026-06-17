@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}{{ narrative.title if narrative else 'Narrative' }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('index') }}" class="back-link">← Dashboard</a>
+  <div class="page-header-actions">
+    <a href="{{ url_for('view_characters', project_id=project.id) }}" class="btn btn-outline btn-sm">👥 Characters</a>
+    <a href="{{ url_for('edit_narrative', project_id=project.id) }}" class="btn btn-primary btn-sm">✏ Edit Narrative</a>
+  </div>
+</div>
+
+{% if narrative %}
+<div class="narrative-hero">
+  <div class="narrative-genre-badge">{{ narrative.genre }}</div>
+  <h1 class="narrative-title gradient-text">{{ narrative.title }}</h1>
+  <p class="narrative-synopsis">{{ narrative.synopsis }}</p>
+  <div class="narrative-tags">
+    {% if narrative.tone %}<span class="tag">{{ narrative.tone }}</span>{% endif %}
+    {% if narrative.time_period %}<span class="tag">{{ narrative.time_period }}</span>{% endif %}
+    {% if narrative.setting %}<span class="tag">{{ narrative.setting }}</span>{% endif %}
+    {% if narrative.target_audience %}<span class="tag">{{ narrative.target_audience }}</span>{% endif %}
+  </div>
+</div>
+
+<div class="narrative-layout">
+  <!-- Main Content -->
+  <div class="narrative-main">
+
+    <div class="narrative-card">
+      <div class="narrative-card-header">
+        <span class="narrative-card-icon">📜</span>
+        <h2>Full Narrative</h2>
+      </div>
+      <div class="narrative-body">
+        {{ narrative.full_narrative | replace('\n', '<br>') | safe }}
+      </div>
+    </div>
+
+    {% if plot_acts %}
+    <div class="narrative-card">
+      <div class="narrative-card-header">
+        <span class="narrative-card-icon">🎬</span>
+        <h2>Plot Structure</h2>
+      </div>
+      <div class="plot-acts">
+        {% for act in plot_acts %}
+        <div class="plot-act">
+          <div class="act-header">
+            <span class="act-number">{{ loop.index }}</span>
+            <h3 class="act-title">{{ act.act }}</h3>
+          </div>
+          <p class="act-desc">{{ act.description }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- Sidebar -->
+  <div class="narrative-sidebar">
+
+    <div class="sidebar-card">
+      <h3 class="sidebar-card-title">🌍 World Building</h3>
+      <p>{{ narrative.world_building }}</p>
+    </div>
+
+    <div class="sidebar-card">
+      <h3 class="sidebar-card-title">⚔ Main Conflict</h3>
+      <p>{{ narrative.main_conflict }}</p>
+    </div>
+
+    <div class="sidebar-card">
+      <h3 class="sidebar-card-title">💡 Themes</h3>
+      <p>{{ narrative.themes }}</p>
+    </div>
+
+    <div class="sidebar-card specs-card">
+      <h3 class="sidebar-card-title">📋 Specifications</h3>
+      <div class="specs-list">
+        {% if narrative.genre %}<div class="spec-item"><span class="spec-key">Genre</span><span class="spec-val">{{ narrative.genre }}</span></div>{% endif %}
+        {% if narrative.sub_genre %}<div class="spec-item"><span class="spec-key">Sub-genre</span><span class="spec-val">{{ narrative.sub_genre }}</span></div>{% endif %}
+        {% if narrative.plot_type %}<div class="spec-item"><span class="spec-key">Plot Type</span><span class="spec-val">{{ narrative.plot_type }}</span></div>{% endif %}
+        {% if narrative.tone %}<div class="spec-item"><span class="spec-key">Tone</span><span class="spec-val">{{ narrative.tone }}</span></div>{% endif %}
+        {% if narrative.protagonist_archetype %}<div class="spec-item"><span class="spec-key">Protagonist</span><span class="spec-val">{{ narrative.protagonist_archetype }}</span></div>{% endif %}
+        {% if narrative.antagonist_type %}<div class="spec-item"><span class="spec-key">Antagonist</span><span class="spec-val">{{ narrative.antagonist_type }}</span></div>{% endif %}
+        {% if narrative.tech_level %}<div class="spec-item"><span class="spec-key">Tech Level</span><span class="spec-val">{{ narrative.tech_level }}</span></div>{% endif %}
+        {% if narrative.world_type %}<div class="spec-item"><span class="spec-key">World Type</span><span class="spec-val">{{ narrative.world_type }}</span></div>{% endif %}
+      </div>
+    </div>
+
+    <div class="sidebar-card chars-cta">
+      <h3 class="sidebar-card-title">👥 Characters</h3>
+      <p>{{ project.characters|length }} character(s) generated for this narrative.</p>
+      <a href="{{ url_for('view_characters', project_id=project.id) }}" class="btn btn-outline btn-sm" style="margin-top:12px; display:inline-block">View Characters →</a>
+    </div>
+
+  </div>
+</div>
+
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon">📝</div>
+  <h3>No narrative generated yet</h3>
+  <p>Fill in the specifications to generate your game narrative.</p>
+  <a href="{{ url_for('create_narrative', project_id=project.id) }}" class="btn btn-primary">Generate Narrative</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,320 @@
+{% extends 'base.html' %}
+{% block title %}Narrative Specifications{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('index') }}" class="back-link">← Back to Dashboard</a>
+  <h1 class="page-title">Craft Your Narrative</h1>
+  <p class="page-sub">Project: <strong>{{ project.title }}</strong> &nbsp;|&nbsp; Fill in as many details as you like — the more you specify, the richer your story.</p>
+</div>
+
+<div class="specs-progress">
+  <div class="progress-step active"><span>1</span>Genre & Setting</div>
+  <div class="progress-line"></div>
+  <div class="progress-step"><span>2</span>Tone & Plot</div>
+  <div class="progress-line"></div>
+  <div class="progress-step"><span>3</span>Characters & World</div>
+  <div class="progress-line"></div>
+  <div class="progress-step"><span>4</span>Generate</div>
+</div>
+
+<form method="POST" action="{{ url_for('create_narrative', project_id=project.id) }}" id="narrativeForm">
+
+  <!-- SECTION 1: Genre & Setting -->
+  <div class="specs-section" id="section-1">
+    <div class="specs-section-header">
+      <div class="specs-icon">🌍</div>
+      <div>
+        <h2>Genre & Setting</h2>
+        <p>Define the world your story lives in.</p>
+      </div>
+    </div>
+    <div class="specs-grid">
+      <div class="form-group">
+        <label class="form-label">Primary Genre</label>
+        <select name="genre" class="form-input form-select" id="genreSelect">
+          <option value="Fantasy">⚔ Fantasy</option>
+          <option value="Sci-Fi">🚀 Sci-Fi</option>
+          <option value="Horror">🕷 Horror</option>
+          <option value="Action-Adventure">🏹 Action-Adventure</option>
+          <option value="RPG">🎭 RPG</option>
+          <option value="Stealth/Thriller">🗡 Stealth / Thriller</option>
+          <option value="Post-Apocalyptic">☢ Post-Apocalyptic</option>
+          <option value="Cyberpunk">🌆 Cyberpunk</option>
+          <option value="Mythology">🏛 Mythology</option>
+          <option value="Western">🤠 Western</option>
+          <option value="Survival">🌿 Survival</option>
+          <option value="Dark Fantasy">🖤 Dark Fantasy</option>
+          <option value="Space Opera">🪐 Space Opera</option>
+          <option value="Steampunk">⚙ Steampunk</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Sub-Genre / Blend</label>
+        <input type="text" name="sub_genre" class="form-input" placeholder="e.g. Dark Fantasy with Cosmic Horror elements">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Setting / World Name</label>
+        <input type="text" name="setting" class="form-input" placeholder="e.g. a shattered empire floating above a dead sea">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Time Period</label>
+        <select name="time_period" class="form-input form-select">
+          <option value="">— Choose —</option>
+          <option>Ancient / Prehistoric</option>
+          <option>Medieval</option>
+          <option>Renaissance</option>
+          <option>Industrial Revolution</option>
+          <option>Modern Day</option>
+          <option>Near Future (2050-2200)</option>
+          <option>Far Future</option>
+          <option>Post-Apocalyptic Future</option>
+          <option>Timeless / Mythic</option>
+          <option>Alternate History</option>
+          <option>Multi-Era / Time Travel</option>
+        </select>
+      </div>
+      <div class="form-group full-width">
+        <label class="form-label">World Type</label>
+        <div class="chip-group" id="worldTypeGroup">
+          <label class="chip"><input type="radio" name="world_type" value="Open World"> Open World</label>
+          <label class="chip"><input type="radio" name="world_type" value="Linear"> Linear / Corridor</label>
+          <label class="chip"><input type="radio" name="world_type" value="Hub-Based"> Hub-Based</label>
+          <label class="chip"><input type="radio" name="world_type" value="Procedural"> Procedural</label>
+          <label class="chip"><input type="radio" name="world_type" value="Multiverse"> Multiverse</label>
+          <label class="chip"><input type="radio" name="world_type" value="Dungeon-Crawler"> Dungeon-Crawler</label>
+          <label class="chip"><input type="radio" name="world_type" value="Metroidvania"> Metroidvania</label>
+          <label class="chip"><input type="radio" name="world_type" value="Sandbox"> Sandbox</label>
+        </div>
+      </div>
+    </div>
+    <div class="section-nav"><button type="button" class="btn btn-outline" onclick="nextSection(1)">Next: Tone & Plot →</button></div>
+  </div>
+
+  <!-- SECTION 2: Tone & Plot -->
+  <div class="specs-section hidden" id="section-2">
+    <div class="specs-section-header">
+      <div class="specs-icon">🎭</div>
+      <div>
+        <h2>Tone & Plot Structure</h2>
+        <p>Shape the emotional feel and narrative architecture.</p>
+      </div>
+    </div>
+    <div class="specs-grid">
+      <div class="form-group">
+        <label class="form-label">Story Tone</label>
+        <select name="tone" class="form-input form-select">
+          <option value="">— Choose —</option>
+          <option>Epic / Grand</option>
+          <option>Dark / Gritty</option>
+          <option>Hopeful / Heroic</option>
+          <option>Melancholic / Bittersweet</option>
+          <option>Horror / Dread</option>
+          <option>Comedic / Satirical</option>
+          <option>Mysterious / Noir</option>
+          <option>Philosophical / Introspective</option>
+          <option>Action-Packed / Kinetic</option>
+          <option>Gothic / Romantic</option>
+          <option>Surreal / Dreamlike</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Plot Type</label>
+        <select name="plot_type" class="form-input form-select">
+          <option value="">— Choose —</option>
+          <option>Hero's Journey / Quest</option>
+          <option>Revenge Story</option>
+          <option>Survival</option>
+          <option>Political Intrigue</option>
+          <option>Mystery / Whodunnit</option>
+          <option>Redemption Arc</option>
+          <option>Rise and Fall</option>
+          <option>Heist</option>
+          <option>War / Resistance</option>
+          <option>Escape / Flight</option>
+          <option>Discovery / Exploration</option>
+          <option>Tragedy</option>
+          <option>Coming of Age</option>
+          <option>Revolution</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Audience</label>
+        <select name="target_audience" class="form-input form-select">
+          <option value="">— Choose —</option>
+          <option>Teen (13-17)</option>
+          <option>Young Adult (18-25)</option>
+          <option>Adult (26+)</option>
+          <option>Mature / 18+</option>
+          <option>All Ages</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Narrative Length / Scope</label>
+        <select name="narrative_length" class="form-input form-select">
+          <option value="short">Short (Indie / 5-10hr game)</option>
+          <option value="medium" selected>Medium (Standard / 20-40hr game)</option>
+          <option value="long">Long (Epic / 60-100hr game)</option>
+          <option value="episodic">Episodic / Series</option>
+        </select>
+      </div>
+      <div class="form-group full-width">
+        <label class="form-label">Core Themes (comma-separated)</label>
+        <input type="text" name="themes_input" class="form-input" placeholder="e.g. sacrifice, identity, corruption of power, found family, redemption">
+        <span class="form-hint">These themes will be woven throughout the narrative and character arcs.</span>
+      </div>
+    </div>
+    <div class="section-nav">
+      <button type="button" class="btn btn-ghost" onclick="prevSection(2)">← Back</button>
+      <button type="button" class="btn btn-outline" onclick="nextSection(2)">Next: Characters & World →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Characters & World -->
+  <div class="specs-section hidden" id="section-3">
+    <div class="specs-section-header">
+      <div class="specs-icon">👥</div>
+      <div>
+        <h2>Characters & World Systems</h2>
+        <p>Define the people and the rules of your world.</p>
+      </div>
+    </div>
+    <div class="specs-grid">
+      <div class="form-group">
+        <label class="form-label">Protagonist Archetype</label>
+        <select name="protagonist_archetype" class="form-input form-select">
+          <option value="">— Choose —</option>
+          <option>The Reluctant Hero</option>
+          <option>The Chosen One</option>
+          <option>The Anti-Hero</option>
+          <option>The Outcast / Exile</option>
+          <option>The Fallen Hero</option>
+          <option>The Veteran</option>
+          <option>The Everyman</option>
+          <option>The Rogue / Trickster</option>
+          <option>The Scholar / Mage</option>
+          <option>The Warrior</option>
+          <option>The Silent Protagonist</option>
+          <option>The Villain-Protagonist</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Antagonist Type</label>
+        <select name="antagonist_type" class="form-input form-select">
+          <option value="">— Choose —</option>
+          <option>The Dark Mirror (same as hero)</option>
+          <option>The Fallen Idealist</option>
+          <option>The Corrupt Authority</option>
+          <option>The Ancient Evil</option>
+          <option>The Nihilist</option>
+          <option>The Monster / Eldritch Force</option>
+          <option>The Betrayer / Former Ally</option>
+          <option>The System / Society</option>
+          <option>The Rival</option>
+          <option>Ambiguous / Sympathetic</option>
+          <option>No Clear Antagonist</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Magic / Power System</label>
+        <input type="text" name="magic_system" class="form-input" placeholder="e.g. Cost-based rune magic, psychic powers, ancient technology...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Technology Level</label>
+        <select name="tech_level" class="form-input form-select">
+          <option value="">— Choose —</option>
+          <option>Stone Age / Primitive</option>
+          <option>Medieval / Low-Tech</option>
+          <option>Early Industrial</option>
+          <option>Modern Contemporary</option>
+          <option>Near Future</option>
+          <option>Advanced Sci-Fi</option>
+          <option>Post-Singularity</option>
+          <option>Mixed / Magitech</option>
+          <option>Ruins of a Lost Advanced Civilization</option>
+        </select>
+      </div>
+    </div>
+    <div class="section-nav">
+      <button type="button" class="btn btn-ghost" onclick="prevSection(3)">← Back</button>
+      <button type="button" class="btn btn-outline" onclick="nextSection(3)">Next: Final Notes →</button>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Generate -->
+  <div class="specs-section hidden" id="section-4">
+    <div class="specs-section-header">
+      <div class="specs-icon">✨</div>
+      <div>
+        <h2>Final Notes & Generate</h2>
+        <p>Any extra details, specific ideas, or constraints to include.</p>
+      </div>
+    </div>
+    <div class="specs-grid">
+      <div class="form-group full-width">
+        <label class="form-label">Additional Notes / Specific Ideas</label>
+        <textarea name="extra_notes" class="form-input form-textarea" rows="6" placeholder="Anything specific you want included: a particular plot twist, an important location, a specific ending tone, inspirations (e.g. 'inspired by Dark Souls and Berserk'), specific rules of the world, etc."></textarea>
+        <span class="form-hint">This is your chance to get very specific. The AI will incorporate these notes into the narrative.</span>
+      </div>
+    </div>
+
+    <div class="generate-preview">
+      <div class="generate-preview-title">Ready to Generate</div>
+      <div class="generate-summary" id="generateSummary">
+        Your specifications will be used to craft a full game narrative including world building, conflict, plot structure, and themes.
+      </div>
+    </div>
+
+    <div class="section-nav">
+      <button type="button" class="btn btn-ghost" onclick="prevSection(4)">← Back</button>
+      <button type="submit" class="btn btn-primary btn-lg btn-generate" id="generateBtn">
+        <span class="btn-icon">✦</span>
+        <span class="btn-text">Generate Narrative</span>
+        <span class="btn-loading hidden">Forging your world...</span>
+      </button>
+    </div>
+  </div>
+
+</form>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let currentSection = 1;
+const totalSections = 4;
+
+function updateProgress() {
+  document.querySelectorAll('.progress-step').forEach((step, i) => {
+    step.classList.toggle('active', i < currentSection);
+    step.classList.toggle('done', i < currentSection - 1);
+  });
+}
+
+function nextSection(from) {
+  document.getElementById(`section-${from}`).classList.add('hidden');
+  document.getElementById(`section-${from + 1}`).classList.remove('hidden');
+  currentSection = from + 1;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevSection(from) {
+  document.getElementById(`section-${from}`).classList.add('hidden');
+  document.getElementById(`section-${from - 1}`).classList.remove('hidden');
+  currentSection = from - 1;
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('narrativeForm').addEventListener('submit', function() {
+  const btn = document.getElementById('generateBtn');
+  btn.querySelector('.btn-text').classList.add('hidden');
+  btn.querySelector('.btn-loading').classList.remove('hidden');
+  btn.querySelector('.btn-icon').textContent = '⟳';
+  btn.disabled = true;
+});
+
+updateProgress();
+</script>
+{% endblock %}

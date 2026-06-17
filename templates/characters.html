@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Characters — {{ project.title }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="back-link">← Narrative</a>
+  <div>
+    <h1 class="page-title">Characters</h1>
+    <p class="page-sub">{{ project.title }}</p>
+  </div>
+  <div class="page-header-actions">
+    <a href="{{ url_for('add_character', project_id=project.id) }}" class="btn btn-outline btn-sm">+ Add Character</a>
+  </div>
+</div>
+
+{% if project.narrative %}
+<div class="generate-chars-bar">
+  <div class="generate-chars-info">
+    <span class="generate-chars-icon">🤖</span>
+    <div>
+      <strong>Generate characters with AI</strong>
+      <p>Creates a full cast based on your narrative. This will replace existing characters.</p>
+    </div>
+  </div>
+  <form method="POST" action="{{ url_for('generate_characters', project_id=project.id) }}" class="generate-chars-form">
+    <div class="generate-chars-count">
+      <label>Number of characters:</label>
+      <select name="count" class="form-input form-select select-sm">
+        <option value="3">3</option>
+        <option value="4" selected>4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="8">8</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary" onclick="this.textContent='Generating...'">✦ Generate Characters</button>
+  </form>
+</div>
+{% endif %}
+
+{% if characters %}
+<div class="characters-grid">
+  {% for char in characters %}
+  <a href="{{ url_for('view_character', project_id=project.id, char_id=char.id) }}" class="character-card" style="--char-color: {{ char.avatar_color }}">
+    <div class="char-card-bg"></div>
+    <div class="char-avatar" style="background: {{ char.avatar_color }}">
+      {{ char.avatar_initials or char.name[0] }}
+    </div>
+    <div class="char-role-badge role-{{ char.role | lower | replace(' ', '-') if char.role else 'unknown' }}">{{ char.role or 'Unknown' }}</div>
+    <h3 class="char-name">{{ char.name }}</h3>
+    <div class="char-archetype">{{ char.archetype or '' }}</div>
+    <div class="char-meta">
+      {% if char.age %}<span>Age {{ char.age }}</span>{% endif %}
+      {% if char.gender %}<span>{{ char.gender }}</span>{% endif %}
+    </div>
+    <p class="char-snippet">{{ (char.personality or '')[:100] }}{% if char.personality and char.personality|length > 100 %}...{% endif %}</p>
+    <div class="char-card-footer">
+      <span class="char-view-link">View Full Profile →</span>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-icon">👥</div>
+  <h3>No characters yet</h3>
+  {% if project.narrative %}
+  <p>Generate a cast of characters tailored to your narrative, or add one manually.</p>
+  {% else %}
+  <p>Generate a narrative first, then create characters based on it.</p>
+  <a href="{{ url_for('create_narrative', project_id=project.id) }}" class="btn btn-primary">Generate Narrative First</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

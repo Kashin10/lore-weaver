@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block title %}Edit {{ character.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('view_character', project_id=project.id, char_id=character.id) }}" class="back-link">← Back to {{ character.name }}</a>
+  <h1 class="page-title">Edit Character</h1>
+</div>
+
+<form method="POST" action="{{ url_for('edit_character', project_id=project.id, char_id=character.id) }}" class="edit-form">
+  <div class="edit-grid">
+    <div class="edit-main">
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">🪪 Identity</h3>
+        <div class="specs-grid">
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-input" value="{{ character.name or '' }}" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <select name="role" class="form-input form-select">
+              <option {% if character.role == 'Protagonist' %}selected{% endif %}>Protagonist</option>
+              <option {% if character.role == 'Antagonist' %}selected{% endif %}>Antagonist</option>
+              <option {% if character.role == 'Ally' %}selected{% endif %}>Ally</option>
+              <option {% if character.role == 'Mentor' %}selected{% endif %}>Mentor</option>
+              <option {% if character.role == 'Rival' %}selected{% endif %}>Rival</option>
+              <option {% if character.role == 'Wild Card' %}selected{% endif %}>Wild Card</option>
+              <option {% if character.role == 'NPC' %}selected{% endif %}>NPC</option>
+              <option {% if character.role == 'Supporting' %}selected{% endif %}>Supporting</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Archetype</label>
+            <input type="text" name="archetype" class="form-input" value="{{ character.archetype or '' }}" placeholder="e.g. The Reluctant Hero">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Age</label>
+            <input type="text" name="age" class="form-input" value="{{ character.age or '' }}" placeholder="e.g. 24, Late 30s">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <input type="text" name="gender" class="form-input" value="{{ character.gender or '' }}" placeholder="e.g. Female, Non-binary">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Avatar Color</label>
+            <div class="color-picker-wrap">
+              <input type="color" name="avatar_color" class="color-picker" value="{{ character.avatar_color or '#6c63ff' }}" id="avatarColor">
+              <span class="color-preview" id="colorPreview" style="background: {{ character.avatar_color or '#6c63ff' }}">{{ character.avatar_initials or character.name[0] }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">👁 Appearance</h3>
+        <textarea name="appearance" class="form-input form-textarea" rows="4">{{ character.appearance or '' }}</textarea>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">🧠 Personality</h3>
+        <textarea name="personality" class="form-input form-textarea" rows="4">{{ character.personality or '' }}</textarea>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">📚 Backstory</h3>
+        <textarea name="backstory" class="form-input form-textarea" rows="6">{{ character.backstory or '' }}</textarea>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">🌠 Character Arc</h3>
+        <textarea name="arc" class="form-input form-textarea" rows="4">{{ character.arc or '' }}</textarea>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">💬 Notable Quotes</h3>
+        <textarea name="quotes" class="form-input form-textarea" rows="3" placeholder="Separate quotes with  |  e.g. 'I am nobody.' | 'Watch me.'">{{ character.quotes or '' }}</textarea>
+        <span class="form-hint">Separate multiple quotes with a pipe: <code>|</code></span>
+      </div>
+
+    </div>
+
+    <div class="edit-sidebar">
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">⚡ Motivations</h3>
+        <textarea name="motivations" class="form-input form-textarea" rows="4">{{ character.motivations or '' }}</textarea>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">⚔ Abilities & Skills</h3>
+        <textarea name="abilities" class="form-input form-textarea" rows="4">{{ character.abilities or '' }}</textarea>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">💔 Flaws & Weaknesses</h3>
+        <textarea name="flaws" class="form-input form-textarea" rows="4">{{ character.flaws or '' }}</textarea>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">🤝 Relationships</h3>
+        <textarea name="relationships" class="form-input form-textarea" rows="4">{{ character.relationships or '' }}</textarea>
+      </div>
+
+      <div class="edit-actions">
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%">💾 Save Character</button>
+        <a href="{{ url_for('view_character', project_id=project.id, char_id=character.id) }}" class="btn btn-ghost" style="width:100%; text-align:center; margin-top:8px">Cancel</a>
+      </div>
+
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const colorInput = document.getElementById('avatarColor');
+const preview = document.getElementById('colorPreview');
+colorInput.addEventListener('input', function() {
+  preview.style.background = this.value;
+});
+</script>
+{% endblock %}

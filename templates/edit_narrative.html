@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}Edit Narrative{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="back-link">← Back to Narrative</a>
+  <h1 class="page-title">Edit Narrative</h1>
+  <p class="page-sub">{{ project.title }}</p>
+</div>
+
+<form method="POST" action="{{ url_for('edit_narrative', project_id=project.id) }}" class="edit-form">
+  <div class="edit-grid">
+
+    <div class="edit-main">
+      <div class="edit-card">
+        <h3 class="edit-card-title">📜 Story Title & Synopsis</h3>
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input type="text" name="title" class="form-input" value="{{ narrative.title or '' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Synopsis</label>
+          <textarea name="synopsis" class="form-input form-textarea" rows="3">{{ narrative.synopsis or '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">📖 Full Narrative</h3>
+        <div class="form-group">
+          <textarea name="full_narrative" class="form-input form-textarea" rows="12">{{ narrative.full_narrative or '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">🎬 Plot Acts</h3>
+        <div id="plotActsContainer">
+          {% for act in plot_acts %}
+          <div class="plot-act-edit">
+            <div class="form-group">
+              <label class="form-label">Act Title</label>
+              <input type="text" name="act_title[]" class="form-input" value="{{ act.act }}">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea name="act_desc[]" class="form-input form-textarea" rows="3">{{ act.description }}</textarea>
+            </div>
+            <button type="button" class="btn btn-danger btn-sm remove-act-btn" onclick="this.parentElement.remove()">Remove Act</button>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="btn btn-outline btn-sm" id="addActBtn" style="margin-top:12px">+ Add Act</button>
+      </div>
+    </div>
+
+    <div class="edit-sidebar">
+      <div class="edit-card">
+        <h3 class="edit-card-title">🌍 World Building</h3>
+        <div class="form-group">
+          <textarea name="world_building" class="form-input form-textarea" rows="6">{{ narrative.world_building or '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">⚔ Main Conflict</h3>
+        <div class="form-group">
+          <textarea name="main_conflict" class="form-input form-textarea" rows="5">{{ narrative.main_conflict or '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">💡 Themes</h3>
+        <div class="form-group">
+          <textarea name="themes" class="form-input form-textarea" rows="3">{{ narrative.themes or '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="edit-card">
+        <h3 class="edit-card-title">📋 Meta</h3>
+        <div class="form-group">
+          <label class="form-label">Genre</label>
+          <input type="text" name="genre" class="form-input" value="{{ narrative.genre or '' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tone</label>
+          <input type="text" name="tone" class="form-input" value="{{ narrative.tone or '' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Setting</label>
+          <input type="text" name="setting" class="form-input" value="{{ narrative.setting or '' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Additional Notes</label>
+          <textarea name="extra_notes" class="form-input form-textarea" rows="3">{{ narrative.extra_notes or '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="edit-actions">
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%">💾 Save Changes</button>
+        <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="btn btn-ghost" style="width:100%; text-align:center; margin-top:8px">Cancel</a>
+      </div>
+    </div>
+
+  </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('addActBtn').addEventListener('click', function() {
+  const container = document.getElementById('plotActsContainer');
+  const div = document.createElement('div');
+  div.className = 'plot-act-edit';
+  div.innerHTML = `
+    <div class="form-group">
+      <label class="form-label">Act Title</label>
+      <input type="text" name="act_title[]" class="form-input" placeholder="Act title...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea name="act_desc[]" class="form-input form-textarea" rows="3" placeholder="What happens in this act..."></textarea>
+    </div>
+    <button type="button" class="btn btn-danger btn-sm remove-act-btn" onclick="this.parentElement.remove()">Remove Act</button>
+  `;
+  container.appendChild(div);
+});
+</script>
+{% endblock %}

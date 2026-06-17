@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}NarrativeForge{% endblock %} | NarrativeForge</title>
+  <meta name="description" content="AI-powered video game narrative and character generator">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <nav class="navbar">
+    <a href="{{ url_for('index') }}" class="nav-logo">
+      <span class="logo-icon">⚔</span>
+      <span>NarrativeForge</span>
+    </a>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">Dashboard</a>
+      <a href="{{ url_for('create_project') }}" class="nav-link btn-nav">+ New Project</a>
+      <a href="{{ url_for('settings') }}" class="nav-link settings-link" title="Settings">⚙</a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <p>NarrativeForge &mdash; AI-Powered Game Storytelling &nbsp;|&nbsp; Built with Flask &amp; Gemini AI</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

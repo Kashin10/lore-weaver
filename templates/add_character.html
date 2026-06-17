@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Add Character{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <a href="{{ url_for('view_characters', project_id=project.id) }}" class="back-link">← Characters</a>
+  <h1 class="page-title">Add Character</h1>
+  <p class="page-sub">{{ project.title }}</p>
+</div>
+
+<form method="POST" action="{{ url_for('add_character', project_id=project.id) }}" class="edit-form">
+  <div class="edit-grid">
+    <div class="edit-main">
+      <div class="edit-card">
+        <h3 class="edit-card-title">🪪 Identity</h3>
+        <div class="specs-grid">
+          <div class="form-group">
+            <label class="form-label">Name *</label>
+            <input type="text" name="name" class="form-input" placeholder="Character name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Role</label>
+            <select name="role" class="form-input form-select">
+              <option>Protagonist</option><option>Antagonist</option><option>Ally</option>
+              <option>Mentor</option><option>Rival</option><option>Wild Card</option>
+              <option>NPC</option><option>Supporting</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Archetype</label>
+            <input type="text" name="archetype" class="form-input" placeholder="e.g. The Reluctant Hero">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Age</label>
+            <input type="text" name="age" class="form-input" placeholder="e.g. 24">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <input type="text" name="gender" class="form-input" placeholder="e.g. Female">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Avatar Color</label>
+            <div class="color-picker-wrap">
+              <input type="color" name="avatar_color" class="color-picker" value="#6c63ff" id="avatarColor">
+              <span class="color-preview" id="colorPreview" style="background: #6c63ff">?</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="edit-card">
+        <h3 class="edit-card-title">👁 Appearance</h3>
+        <textarea name="appearance" class="form-input form-textarea" rows="3" placeholder="Physical description..."></textarea>
+      </div>
+      <div class="edit-card">
+        <h3 class="edit-card-title">🧠 Personality</h3>
+        <textarea name="personality" class="form-input form-textarea" rows="3" placeholder="Personality traits..."></textarea>
+      </div>
+      <div class="edit-card">
+        <h3 class="edit-card-title">📚 Backstory</h3>
+        <textarea name="backstory" class="form-input form-textarea" rows="5" placeholder="Character history..."></textarea>
+      </div>
+      <div class="edit-card">
+        <h3 class="edit-card-title">🌠 Character Arc</h3>
+        <textarea name="arc" class="form-input form-textarea" rows="3" placeholder="How does this character change?"></textarea>
+      </div>
+      <div class="edit-card">
+        <h3 class="edit-card-title">💬 Notable Quotes</h3>
+        <textarea name="quotes" class="form-input form-textarea" rows="2" placeholder="Quote 1 | Quote 2 | Quote 3"></textarea>
+      </div>
+    </div>
+    <div class="edit-sidebar">
+      <div class="edit-card">
+        <h3 class="edit-card-title">⚡ Motivations</h3>
+        <textarea name="motivations" class="form-input form-textarea" rows="3" placeholder="What drives them?"></textarea>
+      </div>
+      <div class="edit-card">
+        <h3 class="edit-card-title">⚔ Abilities & Skills</h3>
+        <textarea name="abilities" class="form-input form-textarea" rows="3" placeholder="Skills, powers..."></textarea>
+      </div>
+      <div class="edit-card">
+        <h3 class="edit-card-title">💔 Flaws & Weaknesses</h3>
+        <textarea name="flaws" class="form-input form-textarea" rows="3" placeholder="Internal conflicts, weaknesses..."></textarea>
+      </div>
+      <div class="edit-card">
+        <h3 class="edit-card-title">🤝 Relationships</h3>
+        <textarea name="relationships" class="form-input form-textarea" rows="3" placeholder="How they relate to others..."></textarea>
+      </div>
+      <div class="edit-actions">
+        <button type="submit" class="btn btn-primary btn-lg" style="width:100%">✦ Add Character</button>
+        <a href="{{ url_for('view_characters', project_id=project.id) }}" class="btn btn-ghost" style="width:100%;text-align:center;margin-top:8px">Cancel</a>
+      </div>
+    </div>
+  </div>
+</form>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+const colorInput = document.getElementById('avatarColor');
+const preview = document.getElementById('colorPreview');
+colorInput.addEventListener('input', function() { preview.style.background = this.value; });
+</script>
+{% endblock %}
