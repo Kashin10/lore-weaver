@@ -2,6 +2,18 @@
 {% block title %}Edit {{ character.name }}{% endblock %}
 
 {% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('index') }}" class="breadcrumb-link">Dashboard</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="breadcrumb-link">{{ project.title }}</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{{ url_for('view_characters', project_id=project.id) }}" class="breadcrumb-link">Characters</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{{ url_for('view_character', project_id=project.id, char_id=character.id) }}" class="breadcrumb-link">{{ character.name }}</a>
+  <span class="breadcrumb-sep">/</span>
+  <span class="breadcrumb-current">Edit</span>
+</div>
+
 <div class="page-header">
   <a href="{{ url_for('view_character', project_id=project.id, char_id=character.id) }}" class="back-link">← Back to {{ character.name }}</a>
   <h1 class="page-title">Edit Character</h1>
@@ -55,27 +67,27 @@
 
       <div class="edit-card">
         <h3 class="edit-card-title">👁 Appearance</h3>
-        <textarea name="appearance" class="form-input form-textarea" rows="4">{{ character.appearance or '' }}</textarea>
+        <textarea name="appearance" class="form-input form-textarea" rows="4" data-maxchars="500">{{ character.appearance or '' }}</textarea>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">🧠 Personality</h3>
-        <textarea name="personality" class="form-input form-textarea" rows="4">{{ character.personality or '' }}</textarea>
+        <textarea name="personality" class="form-input form-textarea" rows="4" data-maxchars="500">{{ character.personality or '' }}</textarea>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">📚 Backstory</h3>
-        <textarea name="backstory" class="form-input form-textarea" rows="6">{{ character.backstory or '' }}</textarea>
+        <textarea name="backstory" class="form-input form-textarea" rows="6" data-maxchars="1000">{{ character.backstory or '' }}</textarea>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">🌠 Character Arc</h3>
-        <textarea name="arc" class="form-input form-textarea" rows="4">{{ character.arc or '' }}</textarea>
+        <textarea name="arc" class="form-input form-textarea" rows="4" data-maxchars="500">{{ character.arc or '' }}</textarea>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">💬 Notable Quotes</h3>
-        <textarea name="quotes" class="form-input form-textarea" rows="3" placeholder="Separate quotes with  |  e.g. 'I am nobody.' | 'Watch me.'">{{ character.quotes or '' }}</textarea>
+        <textarea name="quotes" class="form-input form-textarea" rows="3" placeholder="Separate quotes with  |  e.g. 'I am nobody.' | 'Watch me.'" data-maxchars="300">{{ character.quotes or '' }}</textarea>
         <span class="form-hint">Separate multiple quotes with a pipe: <code>|</code></span>
       </div>
 
@@ -85,22 +97,22 @@
 
       <div class="edit-card">
         <h3 class="edit-card-title">⚡ Motivations</h3>
-        <textarea name="motivations" class="form-input form-textarea" rows="4">{{ character.motivations or '' }}</textarea>
+        <textarea name="motivations" class="form-input form-textarea" rows="4" data-maxchars="400">{{ character.motivations or '' }}</textarea>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">⚔ Abilities & Skills</h3>
-        <textarea name="abilities" class="form-input form-textarea" rows="4">{{ character.abilities or '' }}</textarea>
+        <textarea name="abilities" class="form-input form-textarea" rows="4" data-maxchars="400">{{ character.abilities or '' }}</textarea>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">💔 Flaws & Weaknesses</h3>
-        <textarea name="flaws" class="form-input form-textarea" rows="4">{{ character.flaws or '' }}</textarea>
+        <textarea name="flaws" class="form-input form-textarea" rows="4" data-maxchars="400">{{ character.flaws or '' }}</textarea>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">🤝 Relationships</h3>
-        <textarea name="relationships" class="form-input form-textarea" rows="4">{{ character.relationships or '' }}</textarea>
+        <textarea name="relationships" class="form-input form-textarea" rows="4" data-maxchars="400">{{ character.relationships or '' }}</textarea>
       </div>
 
       <div class="edit-actions">

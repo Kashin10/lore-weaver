@@ -18,7 +18,7 @@
   <div class="progress-step"><span>4</span>Generate</div>
 </div>
 
-<form method="POST" action="{{ url_for('create_narrative', project_id=project.id) }}" id="narrativeForm">
+<form method="POST" action="{{ url_for('create_narrative', project_id=project.id) }}" id="narrativeForm" data-loading="Forging your game narrative...">
 
   <!-- SECTION 1: Genre & Setting -->
   <div class="specs-section" id="section-1">
@@ -31,7 +31,7 @@
     </div>
     <div class="specs-grid">
       <div class="form-group">
-        <label class="form-label">Primary Genre</label>
+        <label class="form-label">Primary Genre <span class="field-badge badge-core">Core</span></label>
         <select name="genre" class="form-input form-select" id="genreSelect">
           <option value="Fantasy">⚔ Fantasy</option>
           <option value="Sci-Fi">🚀 Sci-Fi</option>
@@ -50,15 +50,15 @@
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Sub-Genre / Blend</label>
+        <label class="form-label">Sub-Genre / Blend <span class="field-badge badge-optional">Optional</span></label>
         <input type="text" name="sub_genre" class="form-input" placeholder="e.g. Dark Fantasy with Cosmic Horror elements">
       </div>
       <div class="form-group">
-        <label class="form-label">Setting / World Name</label>
-        <input type="text" name="setting" class="form-input" placeholder="e.g. a shattered empire floating above a dead sea">
+        <label class="form-label">Setting / World Name <span class="field-badge badge-core">Core</span></label>
+        <input type="text" name="setting" class="form-input" placeholder="e.g. a shattered empire floating above a dead sea" data-maxchars="100">
       </div>
       <div class="form-group">
-        <label class="form-label">Time Period</label>
+        <label class="form-label">Time Period <span class="field-badge badge-optional">Optional</span></label>
         <select name="time_period" class="form-input form-select">
           <option value="">— Choose —</option>
           <option>Ancient / Prehistoric</option>
@@ -75,7 +75,7 @@
         </select>
       </div>
       <div class="form-group full-width">
-        <label class="form-label">World Type</label>
+        <label class="form-label">World Type <span class="field-badge badge-optional">Optional</span></label>
         <div class="chip-group" id="worldTypeGroup">
           <label class="chip"><input type="radio" name="world_type" value="Open World"> Open World</label>
           <label class="chip"><input type="radio" name="world_type" value="Linear"> Linear / Corridor</label>
@@ -86,9 +86,13 @@
           <label class="chip"><input type="radio" name="world_type" value="Metroidvania"> Metroidvania</label>
           <label class="chip"><input type="radio" name="world_type" value="Sandbox"> Sandbox</label>
         </div>
+        <span class="form-hint">Optional — leave unselected to let the AI decide.</span>
       </div>
     </div>
-    <div class="section-nav"><button type="button" class="btn btn-outline" onclick="nextSection(1)">Next: Tone & Plot →</button></div>
+    <div class="section-nav">
+      <button type="button" class="btn btn-outline" onclick="nextSection(1)">Next: Tone & Plot →</button>
+      <button type="button" class="btn btn-ghost" style="margin-left: auto;" onclick="quickGenerate()">Quick Generate ✦</button>
+    </div>
   </div>
 
   <!-- SECTION 2: Tone & Plot -->
@@ -102,7 +106,7 @@
     </div>
     <div class="specs-grid">
       <div class="form-group">
-        <label class="form-label">Story Tone</label>
+        <label class="form-label">Story Tone <span class="field-badge badge-core">Core</span></label>
         <select name="tone" class="form-input form-select">
           <option value="">— Choose —</option>
           <option>Epic / Grand</option>
@@ -119,7 +123,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Plot Type</label>
+        <label class="form-label">Plot Type <span class="field-badge badge-core">Core</span></label>
         <select name="plot_type" class="form-input form-select">
           <option value="">— Choose —</option>
           <option>Hero's Journey / Quest</option>
@@ -139,7 +143,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Target Audience</label>
+        <label class="form-label">Target Audience <span class="field-badge badge-optional">Optional</span></label>
         <select name="target_audience" class="form-input form-select">
           <option value="">— Choose —</option>
           <option>Teen (13-17)</option>
@@ -150,7 +154,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Narrative Length / Scope</label>
+        <label class="form-label">Narrative Length / Scope <span class="field-badge badge-optional">Optional</span></label>
         <select name="narrative_length" class="form-input form-select">
           <option value="short">Short (Indie / 5-10hr game)</option>
           <option value="medium" selected>Medium (Standard / 20-40hr game)</option>
@@ -159,8 +163,8 @@
         </select>
       </div>
       <div class="form-group full-width">
-        <label class="form-label">Core Themes (comma-separated)</label>
-        <input type="text" name="themes_input" class="form-input" placeholder="e.g. sacrifice, identity, corruption of power, found family, redemption">
+        <label class="form-label">Core Themes (comma-separated) <span class="field-badge badge-optional">Optional</span></label>
+        <input type="text" name="themes_input" class="form-input" placeholder="e.g. sacrifice, identity, corruption of power, found family, redemption" data-maxchars="150">
         <span class="form-hint">These themes will be woven throughout the narrative and character arcs.</span>
       </div>
     </div>
@@ -181,7 +185,7 @@
     </div>
     <div class="specs-grid">
       <div class="form-group">
-        <label class="form-label">Protagonist Archetype</label>
+        <label class="form-label">Protagonist Archetype <span class="field-badge badge-optional">Optional</span></label>
         <select name="protagonist_archetype" class="form-input form-select">
           <option value="">— Choose —</option>
           <option>The Reluctant Hero</option>
@@ -199,7 +203,7 @@
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Antagonist Type</label>
+        <label class="form-label">Antagonist Type <span class="field-badge badge-optional">Optional</span></label>
         <select name="antagonist_type" class="form-input form-select">
           <option value="">— Choose —</option>
           <option>The Dark Mirror (same as hero)</option>
@@ -216,11 +220,11 @@
         </select>
       </div>
       <div class="form-group">
-        <label class="form-label">Magic / Power System</label>
-        <input type="text" name="magic_system" class="form-input" placeholder="e.g. Cost-based rune magic, psychic powers, ancient technology...">
+        <label class="form-label">Magic / Power System <span class="field-badge badge-optional">Optional</span></label>
+        <input type="text" name="magic_system" class="form-input" placeholder="e.g. Cost-based rune magic, psychic powers, ancient technology..." data-maxchars="100">
       </div>
       <div class="form-group">
-        <label class="form-label">Technology Level</label>
+        <label class="form-label">Technology Level <span class="field-badge badge-optional">Optional</span></label>
         <select name="tech_level" class="form-input form-select">
           <option value="">— Choose —</option>
           <option>Stone Age / Primitive</option>
@@ -252,8 +256,8 @@
     </div>
     <div class="specs-grid">
       <div class="form-group full-width">
-        <label class="form-label">Additional Notes / Specific Ideas</label>
-        <textarea name="extra_notes" class="form-input form-textarea" rows="6" placeholder="Anything specific you want included: a particular plot twist, an important location, a specific ending tone, inspirations (e.g. 'inspired by Dark Souls and Berserk'), specific rules of the world, etc."></textarea>
+        <label class="form-label">Additional Notes / Specific Ideas <span class="field-badge badge-optional">Optional</span></label>
+        <textarea name="extra_notes" class="form-input form-textarea" rows="6" placeholder="Anything specific you want included: a particular plot twist, an important location, a specific ending tone, inspirations (e.g. 'inspired by Dark Souls and Berserk'), specific rules of the world, etc." data-maxchars="1000"></textarea>
         <span class="form-hint">This is your chance to get very specific. The AI will incorporate these notes into the narrative.</span>
       </div>
     </div>
@@ -270,7 +274,6 @@
       <button type="submit" class="btn btn-primary btn-lg btn-generate" id="generateBtn">
         <span class="btn-icon">✦</span>
         <span class="btn-text">Generate Narrative</span>
-        <span class="btn-loading hidden">Forging your world...</span>
       </button>
     </div>
   </div>
@@ -281,40 +284,43 @@
 
 {% block extra_scripts %}
 <script>
-let currentSection = 1;
-const totalSections = 4;
+  // Pre-fill form specs if they exist in the DB
+  const initialSpecs = {
+    genre: {{ (project.narrative.genre or '') | tojson }},
+    sub_genre: {{ (project.narrative.sub_genre or '') | tojson }},
+    setting: {{ (project.narrative.setting or '') | tojson }},
+    time_period: {{ (project.narrative.time_period or '') | tojson }},
+    world_type: {{ (project.narrative.world_type or '') | tojson }},
+    tone: {{ (project.narrative.tone or '') | tojson }},
+    plot_type: {{ (project.narrative.plot_type or '') | tojson }},
+    target_audience: {{ (project.narrative.target_audience or '') | tojson }},
+    narrative_length: {{ (project.narrative.narrative_length or 'medium') | tojson }},
+    themes_input: {{ (project.narrative.themes_input or '') | tojson }},
+    protagonist_archetype: {{ (project.narrative.protagonist_archetype or '') | tojson }},
+    antagonist_type: {{ (project.narrative.antagonist_type or '') | tojson }},
+    magic_system: {{ (project.narrative.magic_system or '') | tojson }},
+    tech_level: {{ (project.narrative.tech_level or '') | tojson }},
+    extra_notes: {{ (project.narrative.extra_notes or '') | tojson }}
+  };
 
-function updateProgress() {
-  document.querySelectorAll('.progress-step').forEach((step, i) => {
-    step.classList.toggle('active', i < currentSection);
-    step.classList.toggle('done', i < currentSection - 1);
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('narrativeForm');
+    if (!form) return;
+    for (const [key, val] of Object.entries(initialSpecs)) {
+      if (!val) continue;
+      const input = form.elements[key];
+      if (!input) continue;
+      if (input.type === 'radio' || input instanceof RadioNodeList) {
+        const radios = form.querySelectorAll(`[name="${key}"]`);
+        radios.forEach(radio => {
+          if (radio.value === val) {
+            radio.checked = true;
+          }
+        });
+      } else {
+        input.value = val;
+      }
+    }
   });
-}
-
-function nextSection(from) {
-  document.getElementById(`section-${from}`).classList.add('hidden');
-  document.getElementById(`section-${from + 1}`).classList.remove('hidden');
-  currentSection = from + 1;
-  updateProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function prevSection(from) {
-  document.getElementById(`section-${from}`).classList.add('hidden');
-  document.getElementById(`section-${from - 1}`).classList.remove('hidden');
-  currentSection = from - 1;
-  updateProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-document.getElementById('narrativeForm').addEventListener('submit', function() {
-  const btn = document.getElementById('generateBtn');
-  btn.querySelector('.btn-text').classList.add('hidden');
-  btn.querySelector('.btn-loading').classList.remove('hidden');
-  btn.querySelector('.btn-icon').textContent = '⟳';
-  btn.disabled = true;
-});
-
-updateProgress();
 </script>
 {% endblock %}

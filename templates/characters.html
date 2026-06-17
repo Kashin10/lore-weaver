@@ -2,6 +2,14 @@
 {% block title %}Characters — {{ project.title }}{% endblock %}
 
 {% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('index') }}" class="breadcrumb-link">Dashboard</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="breadcrumb-link">{{ project.title }}</a>
+  <span class="breadcrumb-sep">/</span>
+  <span class="breadcrumb-current">Characters</span>
+</div>
+
 <div class="page-header">
   <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="back-link">← Narrative</a>
   <div>
@@ -22,7 +30,7 @@
       <p>Creates a full cast based on your narrative. This will replace existing characters.</p>
     </div>
   </div>
-  <form method="POST" action="{{ url_for('generate_characters', project_id=project.id) }}" class="generate-chars-form">
+  <form method="POST" action="{{ url_for('generate_characters', project_id=project.id) }}" class="generate-chars-form" data-loading="Forging your characters...">
     <div class="generate-chars-count">
       <label>Number of characters:</label>
       <select name="count" class="form-input form-select select-sm">
@@ -33,7 +41,7 @@
         <option value="8">8</option>
       </select>
     </div>
-    <button type="submit" class="btn btn-primary" onclick="this.textContent='Generating...'">✦ Generate Characters</button>
+    <button type="submit" class="btn btn-primary">✦ Generate Characters</button>
   </form>
 </div>
 {% endif %}

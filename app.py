@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
@@ -126,12 +126,12 @@ Respond ONLY with a valid JSON object (no markdown, no code fences) with these e
             text = response.text.strip()
             if text.startswith('```'):
                 text = text[text.find('{'):text.rfind('}')+1]
-            return json.loads(text)
+            return json.loads(text), False
         except Exception as e:
             print(f'AI Error: {e}')
-    
+
     # Fallback template
-    return generate_fallback_narrative(specs)
+    return generate_fallback_narrative(specs), True
 
 def generate_characters_ai(narrative, count=4):
     client = get_gemini_client()
@@ -172,11 +172,11 @@ Respond ONLY with a valid JSON array (no markdown, no code fences):
             text = response.text.strip()
             if text.startswith('```'):
                 text = text[text.find('['):text.rfind(']')+1]
-            return json.loads(text)
+            return json.loads(text), False
         except Exception as e:
             print(f'AI Error: {e}')
 
-    return generate_fallback_characters(narrative, count)
+    return generate_fallback_characters(narrative, count), True
 
 def generate_fallback_narrative(specs):
     genre = specs.get('genre', 'Fantasy')
@@ -310,8 +310,8 @@ def create_narrative(project_id):
             'tech_level': request.form.get('tech_level'),
             'extra_notes': request.form.get('extra_notes'),
         }
-        result = generate_narrative_ai(specs)
-        
+        result, used_fallback = generate_narrative_ai(specs)
+
         plot_acts_json = json.dumps(result.get('plot_acts', []))
 
         narrative = Narrative(
@@ -329,6 +329,10 @@ def create_narrative(project_id):
         project.title = result.get('title', project.title)
         project.genre = specs.get('genre', project.genre)
         db.session.commit()
+        if used_fallback:
+            flash('⚠ AI generation was unavailable — showing demo content. Add your Gemini key in Settings.', 'warning')
+        else:
+            flash('✦ Narrative generated successfully!', 'success')
         return redirect(url_for('view_narrative', project_id=project_id))
     return render_template('create_narrative.html', project=project)
 
@@ -376,6 +380,7 @@ def edit_narrative(project_id):
         narrative.plot_acts = json.dumps(acts)
         project.title = narrative.title
         db.session.commit()
+        flash('✓ Narrative saved successfully.', 'success')
         return redirect(url_for('view_narrative', project_id=project_id))
 
     return render_template('edit_narrative.html', project=project, narrative=narrative, plot_acts=plot_acts)
@@ -397,8 +402,8 @@ def generate_characters(project_id):
     # Clear existing characters
     Character.query.filter_by(project_id=project_id).delete()
     db.session.commit()
-    
-    chars_data = generate_characters_ai(narrative, count)
+
+    chars_data, used_fallback = generate_characters_ai(narrative, count)
     for c in chars_data:
         name = c.get('name', 'Unknown')
         initials = ''.join([w[0].upper() for w in name.split()[:2]])
@@ -423,13 +428,29 @@ def generate_characters(project_id):
         )
         db.session.add(char)
     db.session.commit()
+    if used_fallback:
+        flash('⚠ AI generation was unavailable — showing demo characters. Add your Gemini key in Settings.', 'warning')
+    else:
+        flash(f'✦ {count} characters generated successfully!', 'success')
     return redirect(url_for('view_characters', project_id=project_id))
 
 @app.route('/project/<int:project_id>/character/<int:char_id>')
 def view_character(project_id, char_id):
     project = Project.query.get_or_404(project_id)
     character = Character.query.get_or_404(char_id)
-    return render_template('character_detail.html', project=project, character=character)
+    quotes_list = []
+    if character.quotes:
+        # Check if stored as JSON list
+        try:
+            parsed = json.loads(character.quotes)
+            if isinstance(parsed, list):
+                quotes_list = parsed
+            else:
+                quotes_list = [str(parsed)]
+        except:
+            # Fallback to splitting by '|'
+            quotes_list = [q.strip() for q in character.quotes.split('|') if q.strip()]
+    return render_template('character_detail.html', project=project, character=character, quotes_list=quotes_list)
 
 @app.route('/project/<int:project_id>/character/<int:char_id>/edit', methods=['GET', 'POST'])
 def edit_character(project_id, char_id):
@@ -454,6 +475,7 @@ def edit_character(project_id, char_id):
         initials = ''.join([w[0].upper() for w in character.name.split()[:2]])
         character.avatar_initials = initials
         db.session.commit()
+        flash('✓ Character saved successfully.', 'success')
         return redirect(url_for('view_character', project_id=project_id, char_id=char_id))
     return render_template('edit_character.html', project=project, character=character)
 
@@ -484,6 +506,7 @@ def add_character(project_id):
         )
         db.session.add(char)
         db.session.commit()
+        flash('✓ Character added successfully.', 'success')
         return redirect(url_for('view_characters', project_id=project_id))
     return render_template('add_character.html', project=project)
 
@@ -514,9 +537,18 @@ def settings():
         with open(env_path, 'w') as f:
             f.write(f'GEMINI_API_KEY={api_key}\n')
         load_dotenv(override=True)
+        flash('✓ API key saved. AI generation is now enabled.', 'success')
         return redirect(url_for('settings'))
     has_key = bool(os.getenv('GEMINI_API_KEY'))
     return render_template('settings.html', has_key=has_key)
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('404.html', error_code=500, error_title='Server Error', error_sub='Something went wrong on our end. Please try again.'), 500
 
 if __name__ == '__main__':
     with app.app_context():

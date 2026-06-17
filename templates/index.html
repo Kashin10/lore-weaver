@@ -2,6 +2,53 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+{% if projects %}
+<section class="hero-slim">
+  <div class="hero-slim-content">
+    <h1 class="hero-slim-title">Forge Epic <span class="gradient-text">Game Narratives</span></h1>
+    <p class="hero-slim-sub">Your active workspace for AI-powered storytelling.</p>
+  </div>
+  <a href="{{ url_for('create_project') }}" class="btn btn-primary">
+    <span>✦</span> Create New Project
+  </a>
+</section>
+
+<section id="projects" class="section">
+  <div class="section-header">
+    <h2 class="section-title">Your Projects</h2>
+    <a href="{{ url_for('create_project') }}" class="btn btn-outline btn-sm">+ New</a>
+  </div>
+  <div class="projects-grid">
+    {% for project in projects %}
+    <div class="project-card">
+      <div class="project-card-glow"></div>
+      <div class="project-card-inner">
+        <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="project-card-link" aria-label="Open project {{ project.title }}">
+          <div class="project-genre-badge">{{ project.genre or 'Unknown' }}</div>
+          <h3 class="project-title">{{ project.title }}</h3>
+          {% if project.narrative and project.narrative.synopsis %}
+          <p class="project-synopsis">{{ project.narrative.synopsis[:120] }}{% if project.narrative.synopsis|length > 120 %}...{% endif %}</p>
+          {% else %}
+          <p class="project-synopsis no-content">No narrative generated yet.</p>
+          {% endif %}
+          <div class="project-meta">
+            <span class="project-date">{{ project.updated_at.strftime('%b %d, %Y') }}</span>
+            <span class="project-chars">{{ project.characters|length }} characters</span>
+          </div>
+        </a>
+        <div class="project-actions">
+          <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="btn btn-sm btn-outline">Narrative</a>
+          <a href="{{ url_for('view_characters', project_id=project.id) }}" class="btn btn-sm btn-ghost">Characters</a>
+          <form method="POST" action="{{ url_for('delete_project', project_id=project.id) }}" style="display:inline">
+            <button type="submit" class="btn btn-sm btn-danger" data-confirm="Delete this project?" data-confirm-detail="Are you sure you want to delete '{{ project.title }}'? This will permanently delete the narrative and all associated characters." aria-label="Delete project {{ project.title }}">✕</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% else %}
 <section class="hero">
   <div class="hero-badge">AI-Powered Storytelling</div>
   <h1 class="hero-title">Forge Epic <span class="gradient-text">Game Narratives</span></h1>
@@ -10,12 +57,9 @@
     <a href="{{ url_for('create_project') }}" class="btn btn-primary btn-lg">
       <span>✦</span> Create New Project
     </a>
-    {% if projects %}
-    <a href="#projects" class="btn btn-ghost btn-lg">View Projects ↓</a>
-    {% endif %}
   </div>
   <div class="hero-stats">
-    <div class="stat"><span class="stat-num">{{ projects|length }}</span><span class="stat-label">Projects</span></div>
+    <div class="stat"><span class="stat-num">0</span><span class="stat-label">Projects</span></div>
     <div class="stat-divider"></div>
     <div class="stat"><span class="stat-num">∞</span><span class="stat-label">Possibilities</span></div>
     <div class="stat-divider"></div>
@@ -32,48 +76,12 @@
   <div class="feature-pill">🤖 Gemini AI</div>
 </section>
 
-{% if projects %}
-<section id="projects" class="section">
-  <div class="section-header">
-    <h2 class="section-title">Your Projects</h2>
-    <a href="{{ url_for('create_project') }}" class="btn btn-outline btn-sm">+ New</a>
-  </div>
-  <div class="projects-grid">
-    {% for project in projects %}
-    <div class="project-card" onclick="window.location='{{ url_for('view_narrative', project_id=project.id) }}'">
-      <div class="project-card-glow"></div>
-      <div class="project-card-inner">
-        <div class="project-genre-badge">{{ project.genre or 'Unknown' }}</div>
-        <h3 class="project-title">{{ project.title }}</h3>
-        {% if project.narrative and project.narrative.synopsis %}
-        <p class="project-synopsis">{{ project.narrative.synopsis[:120] }}{% if project.narrative.synopsis|length > 120 %}...{% endif %}</p>
-        {% else %}
-        <p class="project-synopsis no-content">No narrative generated yet.</p>
-        {% endif %}
-        <div class="project-meta">
-          <span class="project-date">{{ project.updated_at.strftime('%b %d, %Y') }}</span>
-          <span class="project-chars">{{ project.characters|length }} characters</span>
-        </div>
-        <div class="project-actions">
-          <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="btn btn-sm btn-outline" onclick="event.stopPropagation()">Narrative</a>
-          <a href="{{ url_for('view_characters', project_id=project.id) }}" class="btn btn-sm btn-ghost" onclick="event.stopPropagation()">Characters</a>
-          <form method="POST" action="{{ url_for('delete_project', project_id=project.id) }}" style="display:inline" onclick="event.stopPropagation()">
-            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this project?')">✕</button>
-          </form>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</section>
-{% else %}
 <section class="empty-state">
   <div class="empty-icon">📜</div>
   <h3>No projects yet</h3>
   <p>Your forge is cold. Create your first project to begin crafting your world.</p>
   <a href="{{ url_for('create_project') }}" class="btn btn-primary">Start Forging</a>
 </section>
-{% endif %}
 
 <section class="how-it-works">
   <h2 class="section-title center">How It Works</h2>
@@ -104,4 +112,5 @@
     </div>
   </div>
 </section>
+{% endif %}
 {% endblock %}

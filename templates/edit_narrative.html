@@ -2,6 +2,14 @@
 {% block title %}Edit Narrative{% endblock %}
 
 {% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('index') }}" class="breadcrumb-link">Dashboard</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="breadcrumb-link">{{ project.title }}</a>
+  <span class="breadcrumb-sep">/</span>
+  <span class="breadcrumb-current">Edit Narrative</span>
+</div>
+
 <div class="page-header">
   <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="back-link">← Back to Narrative</a>
   <h1 class="page-title">Edit Narrative</h1>
@@ -20,14 +28,14 @@
         </div>
         <div class="form-group">
           <label class="form-label">Synopsis</label>
-          <textarea name="synopsis" class="form-input form-textarea" rows="3">{{ narrative.synopsis or '' }}</textarea>
+          <textarea name="synopsis" class="form-input form-textarea" rows="3" data-maxchars="300">{{ narrative.synopsis or '' }}</textarea>
         </div>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">📖 Full Narrative</h3>
         <div class="form-group">
-          <textarea name="full_narrative" class="form-input form-textarea" rows="12">{{ narrative.full_narrative or '' }}</textarea>
+          <textarea name="full_narrative" class="form-input form-textarea" rows="12" data-maxchars="5000">{{ narrative.full_narrative or '' }}</textarea>
         </div>
       </div>
 
@@ -42,7 +50,7 @@
             </div>
             <div class="form-group">
               <label class="form-label">Description</label>
-              <textarea name="act_desc[]" class="form-input form-textarea" rows="3">{{ act.description }}</textarea>
+              <textarea name="act_desc[]" class="form-input form-textarea" rows="3" data-maxchars="500">{{ act.description }}</textarea>
             </div>
             <button type="button" class="btn btn-danger btn-sm remove-act-btn" onclick="this.parentElement.remove()">Remove Act</button>
           </div>
@@ -56,21 +64,21 @@
       <div class="edit-card">
         <h3 class="edit-card-title">🌍 World Building</h3>
         <div class="form-group">
-          <textarea name="world_building" class="form-input form-textarea" rows="6">{{ narrative.world_building or '' }}</textarea>
+          <textarea name="world_building" class="form-input form-textarea" rows="6" data-maxchars="2000">{{ narrative.world_building or '' }}</textarea>
         </div>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">⚔ Main Conflict</h3>
         <div class="form-group">
-          <textarea name="main_conflict" class="form-input form-textarea" rows="5">{{ narrative.main_conflict or '' }}</textarea>
+          <textarea name="main_conflict" class="form-input form-textarea" rows="5" data-maxchars="1500">{{ narrative.main_conflict or '' }}</textarea>
         </div>
       </div>
 
       <div class="edit-card">
         <h3 class="edit-card-title">💡 Themes</h3>
         <div class="form-group">
-          <textarea name="themes" class="form-input form-textarea" rows="3">{{ narrative.themes or '' }}</textarea>
+          <textarea name="themes" class="form-input form-textarea" rows="3" data-maxchars="1000">{{ narrative.themes or '' }}</textarea>
         </div>
       </div>
 
@@ -90,7 +98,7 @@
         </div>
         <div class="form-group">
           <label class="form-label">Additional Notes</label>
-          <textarea name="extra_notes" class="form-input form-textarea" rows="3">{{ narrative.extra_notes or '' }}</textarea>
+          <textarea name="extra_notes" class="form-input form-textarea" rows="3" data-maxchars="1000">{{ narrative.extra_notes or '' }}</textarea>
         </div>
       </div>
 

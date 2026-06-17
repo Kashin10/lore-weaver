@@ -24,8 +24,23 @@
     </a>
     <div class="nav-links">
       <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">Dashboard</a>
+      {% if project and project.id %}
+      <span style="opacity: 0.3; margin: 0 4px;">|</span>
+      <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="nav-link {% if request.endpoint in ['view_narrative', 'edit_narrative', 'create_narrative'] %}active{% endif %}">📖 {{ project.title[:15] }}{% if project.title|length > 15 %}...{% endif %}</a>
+      <a href="{{ url_for('view_characters', project_id=project.id) }}" class="nav-link {% if request.endpoint in ['view_characters', 'view_character', 'add_character', 'edit_character'] %}active{% endif %}">👥 Characters</a>
+      {% endif %}
       <a href="{{ url_for('create_project') }}" class="nav-link btn-nav">+ New Project</a>
-      <a href="{{ url_for('settings') }}" class="nav-link settings-link" title="Settings">⚙</a>
+      <a href="{{ url_for('settings') }}" class="nav-link settings-link" aria-label="Settings" title="Settings">⚙</a>
+    </div>
+    <button id="hamburger" class="hamburger" aria-expanded="false" aria-label="Toggle menu">☰</button>
+    <div id="mobileMenu" class="mobile-menu">
+      <a href="{{ url_for('index') }}" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">Dashboard</a>
+      {% if project and project.id %}
+      <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="nav-link {% if request.endpoint in ['view_narrative', 'edit_narrative', 'create_narrative'] %}active{% endif %}">📖 {{ project.title }}</a>
+      <a href="{{ url_for('view_characters', project_id=project.id) }}" class="nav-link {% if request.endpoint in ['view_characters', 'view_character', 'add_character', 'edit_character'] %}active{% endif %}">👥 Characters</a>
+      {% endif %}
+      <a href="{{ url_for('create_project') }}" class="nav-link btn-nav">+ New Project</a>
+      <a href="{{ url_for('settings') }}" class="nav-link settings-link" aria-label="Settings">⚙ Settings</a>
     </div>
   </nav>
 
@@ -33,7 +48,10 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="flash flash-{{ category }}">{{ message }}</div>
+          <div class="flash flash-{{ category }}">
+            <span>{{ message }}</span>
+            <button class="flash-close" aria-label="Dismiss message">&times;</button>
+          </div>
         {% endfor %}
       {% endif %}
     {% endwith %}
@@ -43,6 +61,27 @@
   <footer class="footer">
     <p>NarrativeForge &mdash; AI-Powered Game Storytelling &nbsp;|&nbsp; Built with Flask &amp; Gemini AI</p>
   </footer>
+
+  <!-- ── Loading Overlay ─────────────────────────────── -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-spinner"></div>
+    <h3 class="loading-title">Consulting the ancient archives...</h3>
+    <p class="loading-text">Weaving the threads of fate...</p>
+  </div>
+
+  <!-- ── Custom Confirm Modal ────────────────────────── -->
+  <div id="confirmModal" class="modal-wrap hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box">
+      <div class="modal-icon">⚠️</div>
+      <h3 class="modal-title">Confirm Action</h3>
+      <p class="modal-detail">Are you sure you want to proceed?</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary modal-cancel">Cancel</button>
+        <button class="btn btn-danger modal-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   {% block extra_scripts %}{% endblock %}

@@ -2,6 +2,16 @@
 {% block title %}Add Character{% endblock %}
 
 {% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('index') }}" class="breadcrumb-link">Dashboard</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="breadcrumb-link">{{ project.title }}</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{{ url_for('view_characters', project_id=project.id) }}" class="breadcrumb-link">Characters</a>
+  <span class="breadcrumb-sep">/</span>
+  <span class="breadcrumb-current">Add Character</span>
+</div>
+
 <div class="page-header">
   <a href="{{ url_for('view_characters', project_id=project.id) }}" class="back-link">← Characters</a>
   <h1 class="page-title">Add Character</h1>
@@ -49,41 +59,41 @@
       </div>
       <div class="edit-card">
         <h3 class="edit-card-title">👁 Appearance</h3>
-        <textarea name="appearance" class="form-input form-textarea" rows="3" placeholder="Physical description..."></textarea>
+        <textarea name="appearance" class="form-input form-textarea" rows="3" placeholder="Physical description..." data-maxchars="500"></textarea>
       </div>
       <div class="edit-card">
         <h3 class="edit-card-title">🧠 Personality</h3>
-        <textarea name="personality" class="form-input form-textarea" rows="3" placeholder="Personality traits..."></textarea>
+        <textarea name="personality" class="form-input form-textarea" rows="3" placeholder="Personality traits..." data-maxchars="500"></textarea>
       </div>
       <div class="edit-card">
         <h3 class="edit-card-title">📚 Backstory</h3>
-        <textarea name="backstory" class="form-input form-textarea" rows="5" placeholder="Character history..."></textarea>
+        <textarea name="backstory" class="form-input form-textarea" rows="5" placeholder="Character history..." data-maxchars="1000"></textarea>
       </div>
       <div class="edit-card">
         <h3 class="edit-card-title">🌠 Character Arc</h3>
-        <textarea name="arc" class="form-input form-textarea" rows="3" placeholder="How does this character change?"></textarea>
+        <textarea name="arc" class="form-input form-textarea" rows="3" placeholder="How does this character change?..." data-maxchars="500"></textarea>
       </div>
       <div class="edit-card">
         <h3 class="edit-card-title">💬 Notable Quotes</h3>
-        <textarea name="quotes" class="form-input form-textarea" rows="2" placeholder="Quote 1 | Quote 2 | Quote 3"></textarea>
+        <textarea name="quotes" class="form-input form-textarea" rows="2" placeholder="Quote 1 | Quote 2 | Quote 3" data-maxchars="300"></textarea>
       </div>
     </div>
     <div class="edit-sidebar">
       <div class="edit-card">
         <h3 class="edit-card-title">⚡ Motivations</h3>
-        <textarea name="motivations" class="form-input form-textarea" rows="3" placeholder="What drives them?"></textarea>
+        <textarea name="motivations" class="form-input form-textarea" rows="3" placeholder="What drives them?..." data-maxchars="400"></textarea>
       </div>
       <div class="edit-card">
         <h3 class="edit-card-title">⚔ Abilities & Skills</h3>
-        <textarea name="abilities" class="form-input form-textarea" rows="3" placeholder="Skills, powers..."></textarea>
+        <textarea name="abilities" class="form-input form-textarea" rows="3" placeholder="Skills, powers..." data-maxchars="400"></textarea>
       </div>
       <div class="edit-card">
         <h3 class="edit-card-title">💔 Flaws & Weaknesses</h3>
-        <textarea name="flaws" class="form-input form-textarea" rows="3" placeholder="Internal conflicts, weaknesses..."></textarea>
+        <textarea name="flaws" class="form-input form-textarea" rows="3" placeholder="Internal conflicts, weaknesses?..." data-maxchars="400"></textarea>
       </div>
       <div class="edit-card">
         <h3 class="edit-card-title">🤝 Relationships</h3>
-        <textarea name="relationships" class="form-input form-textarea" rows="3" placeholder="How they relate to others..."></textarea>
+        <textarea name="relationships" class="form-input form-textarea" rows="3" placeholder="How they relate to others..." data-maxchars="400"></textarea>
       </div>
       <div class="edit-actions">
         <button type="submit" class="btn btn-primary btn-lg" style="width:100%">✦ Add Character</button>

@@ -2,12 +2,22 @@
 {% block title %}{{ character.name }}{% endblock %}
 
 {% block content %}
+<div class="breadcrumbs">
+  <a href="{{ url_for('index') }}" class="breadcrumb-link">Dashboard</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{{ url_for('view_narrative', project_id=project.id) }}" class="breadcrumb-link">{{ project.title }}</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="{{ url_for('view_characters', project_id=project.id) }}" class="breadcrumb-link">Characters</a>
+  <span class="breadcrumb-sep">/</span>
+  <span class="breadcrumb-current">{{ character.name }}</span>
+</div>
+
 <div class="page-header">
   <a href="{{ url_for('view_characters', project_id=project.id) }}" class="back-link">← Characters</a>
   <div class="page-header-actions">
     <a href="{{ url_for('edit_character', project_id=project.id, char_id=character.id) }}" class="btn btn-primary btn-sm">✏ Edit Character</a>
     <form method="POST" action="{{ url_for('delete_character', project_id=project.id, char_id=character.id) }}" style="display:inline">
-      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this character?')">🗑 Delete</button>
+      <button type="submit" class="btn btn-danger btn-sm" data-confirm="Delete this character?" data-confirm-detail="Are you sure you want to delete {{ character.name }}? This action cannot be undone." aria-label="Delete character {{ character.name }}">🗑 Delete</button>
     </form>
   </div>
 </div>
@@ -63,12 +73,12 @@
     </div>
     {% endif %}
 
-    {% if character.quotes %}
+    {% if quotes_list %}
     <div class="char-section-card quotes-card">
       <div class="char-section-icon">💬</div>
       <h2 class="char-section-title">Notable Quotes</h2>
       <div class="quotes-list">
-        {% for quote in character.quotes.split(' | ') %}
+        {% for quote in quotes_list %}
         <blockquote class="char-quote">{{ quote.strip() }}</blockquote>
         {% endfor %}
       </div>
